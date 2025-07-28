@@ -1,10 +1,151 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <meta http-equiv="refresh" content="0; URL=admin.html" />
-    <title>Redirecionando...</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkTree Dinâmico</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+
+    <!-- Meta tags para SEO -->
+    <meta
+      name="description"
+      content="Página de links pessoais - Conecte-se comigo através das redes sociais"
+    />
+    <meta name="keywords" content="links, redes sociais, perfil, contato" />
+    <meta name="author" content="Eduardo" />
+
+    <!-- Open Graph para redes sociais -->
+    <meta property="og:title" content="Meus Links" />
+    <meta
+      property="og:description"
+      content="Conecte-se comigo através dos links abaixo"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="images/fundador.jpg" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Arial", sans-serif;
+      }
+
+      .loader {
+        text-align: center;
+        color: white;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .message {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .sub-message {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .manual-link {
+        margin-top: 30px;
+      }
+
+      .manual-link a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border: 2px solid white;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        display: inline-block;
+      }
+
+      .manual-link a:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-2px);
+      }
+    </style>
   </head>
   <body>
-    <p>Redirecionando para o painel administrativo...</p>
+    <div class="loader">
+      <div class="spinner"></div>
+      <div class="message">Carregando seu perfil...</div>
+      <div class="sub-message">Redirecionando em instantes</div>
+
+      <div class="manual-link">
+        <a href="public.html" id="manual-redirect">Acessar Agora</a>
+      </div>
+    </div>
+
+    <script>
+      // Função para detectar o tipo de acesso
+      function detectarTipoAcesso() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get("admin") === "true";
+        const path = window.location.pathname;
+
+        // Se especificamente solicitado admin
+        if (isAdmin) {
+          window.location.href = "admin.html";
+          return;
+        }
+
+        // Se estiver em localhost, mostrar opções
+        const isLocalhost =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1" ||
+          window.location.hostname === "";
+
+        if (isLocalhost) {
+          document.querySelector(".sub-message").innerHTML = `
+          <a href="public.html" style="color: white; margin-right: 15px;">👁️ Ver Público</a>
+          <a href="admin.html" style="color: white;">⚙️ Admin</a>
+        `;
+          document.querySelector(".message").textContent = "Escolha uma opção:";
+          document.querySelector(".spinner").style.display = "none";
+          return;
+        }
+
+        // Em produção, redirecionar para público
+        setTimeout(() => {
+          window.location.href = "public.html";
+        }, 1500);
+      }
+
+      // Executar quando a página carregar
+      document.addEventListener("DOMContentLoaded", detectarTipoAcesso);
+
+      // Fallback manual
+      document
+        .getElementById("manual-redirect")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          window.location.href = "public.html";
+        });
+    </script>
   </body>
 </html>

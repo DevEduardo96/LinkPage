@@ -1,35 +1,71 @@
-// Se estiver rodando localmente com Netlify CLI, instale o node-fetch: `npm install node-fetch`
 const fetch = require("node-fetch");
 
-exports.handler = async function (event, context) {
-  const url =
-    "https://script.google.com/macros/s/1RSVXEOBKBearJ-5QNo2nHSLeboLo1IwWJa9H1g6P8hry3p6e7iu-3mvV/dev"; // Substitua pelo seu URL correto do Apps Script
+exports.handler = async (event, context) => {
+  // Configurar CORS
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Content-Type": "application/json",
+  };
+
+  // Lidar com preflight requests
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers,
+      body: "",
+    };
+  }
 
   try {
-    const response = await fetch(url);
+    // URL do seu Google Apps Script (substitua pela sua URL)
+    const GOOGLE_SCRIPT_URL =
+      "https://script.google.com/macros/s/SEU_SCRIPT_ID/exec";
 
-    // Aqui, você pode usar .json() se o conteúdo for JSON
+    let response;
+
+    if (event.httpMethod === "GET") {
+      // Para requisições GET
+      response = await fetch(GOOGLE_SCRIPT_URL);
+    } else if (event.httpMethod === "POST") {
+      // Para requisições POST
+      const body = JSON.parse(event.body || "{}");
+
+      response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    }
+
     const data = await response.text();
+
+    // Tentar parsear como JSON, se falhar retornar como texto
+    let jsonData;
+    try {
+      jsonData = JSON.parse(data);
+    } catch (e) {
+      jsonData = { data: data, rawResponse: true };
+    }
 
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*", // Libera CORS
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Content-Type": "application/json",
-      },
-      body: data,
+      headers,
+      body: JSON.stringify(jsonData),
     };
   } catch (error) {
+    console.error("Erro na função:", error);
+
     return {
       statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
-        error: "Erro ao acessar Apps Script",
-        details: error.message,
+        error: "Erro interno do servidor",
+        message: error.message,
+        timestamp: new Date().toISOString(),
       }),
     };
   }

@@ -20,60 +20,526 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
 
-    <title>@meunome</title>
+    <title id="page-title">@meunome</title>
+
+    <style>
+      /* Estilos adicionais para loading e animações */
+      .loading-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #282828;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #5e5e5e;
+        border-top: 4px solid #fe4701;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-in forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slide-up {
+        animation: slideUp 0.6s ease-out forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .error-message {
+        text-align: center;
+        color: #ff6b6b;
+        background: rgba(255, 107, 107, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px;
+        border: 1px solid rgba(255, 107, 107, 0.3);
+      }
+
+      /* Melhorias nos botões */
+      a.link button {
+        position: relative;
+        overflow: hidden;
+      }
+
+      a.link button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      a.link button:hover::before {
+        left: 100%;
+      }
+
+      /* Placeholder para quando não há links */
+      .no-links-message {
+        text-align: center;
+        color: #888;
+        font-style: italic;
+        padding: 40px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        border: 2px dashed #555;
+      }
+
+      /* Admin link fixo */
+      .admin-link {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        font-size: 1.2em;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .admin-link:hover {
+        transform: scale(1.1) rotate(90deg);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      @media (max-width: 768px) {
+        .admin-link {
+          bottom: 15px;
+          right: 15px;
+          width: 45px;
+          height: 45px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <img src="images/fundador.jpg" alt="Minha foto do perfil" />
-        <h1>@Eduardo</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
-          ducimus dolores hic. Iste dolore, temporibus alias sequi delectus
-          illum.
-        </p>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-container">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container" id="main-content" style="display: none">
+      <header class="fade-in">
+        <img
+          id="user-avatar"
+          src="https://via.placeholder.com/150/fe4701/ffffff?text=Avatar"
+          alt="Foto do perfil"
+          onerror="this.src='https://via.placeholder.com/150/fe4701/ffffff?text=Error'"
+        />
+        <h1 id="user-name">@CarregandoDados</h1>
+        <p id="user-description">Carregando informações do perfil...</p>
       </header>
 
-      <section class="botoes-links">
-        <a href="#" target="_blank" class="link">
-          <button class="degrade">
-            <span>Link 1</span>
-            <i class="bi bi-youtube"></i>
-          </button>
-        </a>
-
-        <a href="#" target="_blank" class="link">
-          <button class="degrade">
-            <span>Link 1</span>
-            <i class="bi bi-instagram"></i>
-          </button>
-        </a>
-
-        <a href="#" target="_blank" class="link">
-          <button class="degrade">
-            <span>Link 2</span>
-            <i class="bi bi-code-slash"></i>
-          </button>
-        </a>
-
-        <a href="#" target="_blank" class="link">
-          <button class="degrade">
-            <span>Link 3</span>
-            <i class="bi bi-facebook"></i>
-          </button>
-        </a>
+      <section class="botoes-links slide-up" id="links-section">
+        <!-- Links serão carregados dinamicamente aqui -->
       </section>
-      <!--botoes-links-->
 
-      <footer>
-        <a href="#" class="btn-footer degrade" target="_blank"
-          ><i class="bi bi-envelope-fill"></i
-        ></a>
-        <a href="" class="btn-footer degrade" target="_blank"
-          ><i class="bi bi-github"></i
-        ></a>
+      <footer class="fade-in" id="footer-section" style="display: none">
+        <!-- Links do footer serão carregados aqui -->
       </footer>
     </div>
-    <!--container-->
+
+    <!-- Link para admin (apenas visível em desenvolvimento) -->
+    <a
+      href="admin.html"
+      class="admin-link"
+      title="Painel Administrativo"
+      id="admin-access"
+    >
+      <i class="bi bi-gear-fill"></i>
+    </a>
+
+    <!-- Mensagem de erro -->
+    <div id="error-container" style="display: none">
+      <div class="container">
+        <div class="error-message">
+          <h2>⚠️ Erro ao Carregar Dados</h2>
+          <p id="error-text">
+            Não foi possível carregar as informações do perfil.
+          </p>
+          <button
+            onclick="recarregarDados()"
+            class="btn-retry"
+            style="
+              margin-top: 15px;
+              padding: 10px 20px;
+              background: #fe4701;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            🔄 Tentar Novamente
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "/.netlify/functions/appsScriptProxy";
+
+      // Mapeamento de ícones para Bootstrap Icons
+      const ICON_MAP = {
+        "bi-youtube": "bi-youtube",
+        "bi-instagram": "bi-instagram",
+        "bi-code-slash": "bi-code-slash",
+        "bi-facebook": "bi-facebook",
+        "bi-github": "bi-github",
+        "bi-envelope-fill": "bi-envelope-fill",
+        "bi-linkedin": "bi-linkedin",
+        "bi-twitter": "bi-twitter",
+        "bi-whatsapp": "bi-whatsapp",
+        "bi-telegram": "bi-telegram",
+        "bi-link-45deg": "bi-link-45deg",
+      };
+
+      // Função para mostrar/ocultar loading
+      function showLoading(show = true) {
+        const loadingScreen = document.getElementById("loading-screen");
+        const mainContent = document.getElementById("main-content");
+        const errorContainer = document.getElementById("error-container");
+
+        if (show) {
+          loadingScreen.style.display = "flex";
+          mainContent.style.display = "none";
+          errorContainer.style.display = "none";
+        } else {
+          loadingScreen.style.display = "none";
+          mainContent.style.display = "flex";
+        }
+      }
+
+      // Função para mostrar erro
+      function showError(message) {
+        const loadingScreen = document.getElementById("loading-screen");
+        const mainContent = document.getElementById("main-content");
+        const errorContainer = document.getElementById("error-container");
+        const errorText = document.getElementById("error-text");
+
+        loadingScreen.style.display = "none";
+        mainContent.style.display = "none";
+        errorContainer.style.display = "block";
+        errorText.textContent = message;
+      }
+
+      // Função para carregar dados do admin
+      async function carregarDados() {
+        try {
+          showLoading(true);
+          console.log("🔄 Carregando dados públicos de:", API_URL);
+
+          const response = await fetch(API_URL, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          console.log("📊 Status da resposta:", response.status);
+
+          if (!response.ok) {
+            throw new Error(
+              `Erro HTTP: ${response.status} - ${response.statusText}`
+            );
+          }
+
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            const text = await response.text();
+            console.error("❌ Resposta não é JSON:", text.substring(0, 200));
+            throw new Error("Resposta do servidor não é JSON válido");
+          }
+
+          const dados = await response.json();
+          console.log("✅ Dados recebidos:", dados);
+
+          if (dados.error) {
+            throw new Error(dados.message || "Erro desconhecido do servidor");
+          }
+
+          if (!dados || dados.length === 0) {
+            console.log("⚠️ Nenhum dado encontrado, usando dados padrão");
+            carregarDadosPadrao();
+            return;
+          }
+
+          preencherPagina(dados);
+          showLoading(false);
+        } catch (error) {
+          console.error("❌ Erro ao carregar dados:", error);
+
+          // Em caso de erro, tentar carregar dados padrão
+          console.log("🔄 Tentando carregar dados padrão...");
+          carregarDadosPadrao();
+          showLoading(false);
+        }
+      }
+
+      // Função para carregar dados padrão
+      function carregarDadosPadrao() {
+        const dadosPadrao = [
+          {
+            avatarUrl: "images/fundador.jpg",
+            username: "Eduardo",
+            linkTitle: "",
+            linkUrl: "",
+            linkIcon: "",
+          },
+          {
+            avatarUrl: "",
+            username: "",
+            linkTitle: "YouTube",
+            linkUrl: "https://youtube.com",
+            linkIcon: "bi-youtube",
+          },
+          {
+            avatarUrl: "",
+            username: "",
+            linkTitle: "Instagram",
+            linkUrl: "https://instagram.com",
+            linkIcon: "bi-instagram",
+          },
+          {
+            avatarUrl: "",
+            username: "",
+            linkTitle: "GitHub",
+            linkUrl: "https://github.com",
+            linkIcon: "bi-github",
+          },
+        ];
+
+        preencherPagina(dadosPadrao);
+        console.log("✅ Dados padrão carregados");
+      }
+
+      // Função para preencher a página com os dados
+      function preencherPagina(dados) {
+        try {
+          // Encontrar dados do perfil
+          const perfil =
+            dados.find((item) => item.avatarUrl || item.username) || {};
+
+          // Atualizar informações do perfil
+          const userAvatar = document.getElementById("user-avatar");
+          const userName = document.getElementById("user-name");
+          const userDescription = document.getElementById("user-description");
+          const pageTitle = document.getElementById("page-title");
+
+          if (perfil.avatarUrl) {
+            userAvatar.src = perfil.avatarUrl;
+          }
+
+          if (perfil.username) {
+            const displayName = perfil.username.startsWith("@")
+              ? perfil.username
+              : `@${perfil.username}`;
+            userName.textContent = displayName;
+            pageTitle.textContent = displayName;
+          }
+
+          // Atualizar descrição (você pode adicionar este campo no admin se quiser)
+          userDescription.textContent =
+            "Conecte-se comigo através dos links abaixo! 🚀";
+
+          // Filtrar e processar links
+          const links = dados.filter((item) => item.linkTitle && item.linkUrl);
+
+          console.log("🔗 Links encontrados:", links.length);
+
+          // Separar links principais e do footer
+          const linksRedesSociais = [
+            "bi-facebook",
+            "bi-instagram",
+            "bi-twitter",
+            "bi-linkedin",
+            "bi-whatsapp",
+            "bi-telegram",
+          ];
+          const linksFooter = links.filter(
+            (link) =>
+              linksRedesSociais.includes(link.linkIcon) ||
+              link.linkIcon === "bi-envelope-fill" ||
+              link.linkIcon === "bi-github"
+          );
+
+          const linksPrincipais = links.filter(
+            (link) => !linksFooter.includes(link)
+          );
+
+          // Preencher seção de links principais
+          preencherLinksSection(linksPrincipais);
+
+          // Preencher footer
+          preencherFooter(linksFooter);
+
+          console.log("✅ Página preenchida com sucesso");
+        } catch (error) {
+          console.error("❌ Erro ao preencher página:", error);
+          showError("Erro ao processar dados: " + error.message);
+        }
+      }
+
+      // Função para preencher a seção de links
+      function preencherLinksSection(links) {
+        const linksSection = document.getElementById("links-section");
+        linksSection.innerHTML = "";
+
+        if (links.length === 0) {
+          linksSection.innerHTML = `
+          <div class="no-links-message">
+            <h3>🔗 Nenhum link configurado</h3>
+            <p>Os links aparecerão aqui quando forem adicionados no painel administrativo.</p>
+          </div>
+        `;
+          return;
+        }
+
+        links.forEach((link, index) => {
+          const linkElement = document.createElement("a");
+          linkElement.href = link.linkUrl;
+          linkElement.target = "_blank";
+          linkElement.className = "link";
+          linkElement.style.animationDelay = `${index * 0.1}s`;
+
+          const iconClass = ICON_MAP[link.linkIcon] || "bi-link-45deg";
+
+          linkElement.innerHTML = `
+          <button class="degrade">
+            <span>${link.linkTitle}</span>
+            <i class="${iconClass}"></i>
+          </button>
+        `;
+
+          linksSection.appendChild(linkElement);
+        });
+      }
+
+      // Função para preencher o footer
+      function preencherFooter(linksFooter) {
+        const footerSection = document.getElementById("footer-section");
+
+        if (linksFooter.length === 0) {
+          footerSection.style.display = "none";
+          return;
+        }
+
+        footerSection.style.display = "block";
+        footerSection.innerHTML = "";
+
+        linksFooter.forEach((link, index) => {
+          const linkElement = document.createElement("a");
+          linkElement.href = link.linkUrl;
+          linkElement.target = "_blank";
+          linkElement.className = "btn-footer degrade";
+          linkElement.title = link.linkTitle;
+          linkElement.style.animationDelay = `${(index + 3) * 0.1}s`;
+
+          const iconClass = ICON_MAP[link.linkIcon] || "bi-link-45deg";
+
+          linkElement.innerHTML = `<i class="${iconClass}"></i>`;
+
+          footerSection.appendChild(linkElement);
+        });
+      }
+
+      // Função para recarregar dados
+      function recarregarDados() {
+        carregarDados();
+      }
+
+      // Função para detectar ambiente (esconder admin link em produção)
+      function configurarAmbiente() {
+        const adminLink = document.getElementById("admin-access");
+        const isLocalhost =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1" ||
+          window.location.hostname === "";
+
+        // Mostrar link do admin apenas em desenvolvimento
+        if (!isLocalhost) {
+          adminLink.style.display = "none";
+        }
+      }
+
+      // Event Listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("🚀 Página pública carregada, iniciando aplicação...");
+        configurarAmbiente();
+
+        // Delay pequeno para melhor UX
+        setTimeout(() => {
+          carregarDados();
+        }, 500);
+      });
+
+      // Recarregar dados a cada 5 minutos (opcional)
+      setInterval(carregarDados, 5 * 60 * 1000);
+
+      // Service Worker para cache (opcional - futuro)
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          // navigator.serviceWorker.register('/sw.js')
+          //   .then(registration => console.log('SW registered'))
+          //   .catch(registrationError => console.log('SW registration failed'));
+        });
+      }
+    </script>
   </body>
 </html>
