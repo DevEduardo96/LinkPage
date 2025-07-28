@@ -1,0 +1,3 @@
+[build]
+  publish = "."            # ou coloque "dist" se for Vite/React
+  functions = "netlify/functions"
