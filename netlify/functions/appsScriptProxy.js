@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
   try {
     // URL do seu Google Apps Script (substitua pela sua URL)
     const GOOGLE_SCRIPT_URL =
-      "https://script.google.com/macros/s/SEU_SCRIPT_ID/exec";
+      "https://script.google.com/macros/s/1RSVXEOBKBearJ-5QNo2nHSLeboLo1IwWJa9H1g6P8hry3p6e7iu-3mvV/exec";
 
     let response;
 
