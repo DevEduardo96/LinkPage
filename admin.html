@@ -62,6 +62,7 @@
       <!-- Botão de salvar -->
       <div class="text-center">
         <button
+          id="btn-salvar"
           type="button"
           class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md"
         >
@@ -72,14 +73,14 @@
 
     <script>
       const API_URL =
-        "https://script.google.com/macros/s/AKfycbzGMPFtDatAfZHco6B8cwzd9OPVkWMisBv7VUo-MNe14fFx9mVRC-Bwhwq28uj4lax4/exec";
+        "https://script.google.com/macros/s/AKfycbzFhi-Wu9gAZLxlCgVX0XCO6JbM5QiY3aKFvu6biAo/dev";
 
       async function carregarDados() {
         try {
           const res = await fetch(API_URL);
           const dados = await res.json();
 
-          if (dados.length === 0) return;
+          if (!dados || dados.length === 0) return;
 
           const info = dados.find((d) => d.avatarUrl || d.username);
           if (info) {
@@ -94,6 +95,8 @@
           dados.forEach((item) => {
             if (!item.linkTitle && !item.linkUrl) return;
 
+            const icon = item.linkIcon || "bi-link";
+
             const div = document.createElement("div");
             div.className = "flex items-center space-x-2 mt-2";
             div.innerHTML = `
@@ -105,22 +108,22 @@
               }" />
               <select class="px-2 py-2 border rounded">
                 <option value="bi-youtube" ${
-                  item.linkIcon === "bi-youtube" ? "selected" : ""
+                  icon === "bi-youtube" ? "selected" : ""
                 }>🎥</option>
                 <option value="bi-instagram" ${
-                  item.linkIcon === "bi-instagram" ? "selected" : ""
+                  icon === "bi-instagram" ? "selected" : ""
                 }>📷</option>
                 <option value="bi-code-slash" ${
-                  item.linkIcon === "bi-code-slash" ? "selected" : ""
+                  icon === "bi-code-slash" ? "selected" : ""
                 }>💻</option>
                 <option value="bi-facebook" ${
-                  item.linkIcon === "bi-facebook" ? "selected" : ""
+                  icon === "bi-facebook" ? "selected" : ""
                 }>📘</option>
                 <option value="bi-github" ${
-                  item.linkIcon === "bi-github" ? "selected" : ""
+                  icon === "bi-github" ? "selected" : ""
                 }>🐙</option>
                 <option value="bi-envelope-fill" ${
-                  item.linkIcon === "bi-envelope-fill" ? "selected" : ""
+                  icon === "bi-envelope-fill" ? "selected" : ""
                 }>✉️</option>
               </select>
               <button onclick="removeLink(this)" class="text-red-600 hover:text-red-800">
@@ -142,7 +145,6 @@
 
         const dadosParaSalvar = [];
 
-        // Primeiro objeto: avatar e nome de usuário
         dadosParaSalvar.push({
           avatarUrl,
           username,
@@ -151,7 +153,6 @@
           linkIcon: "",
         });
 
-        // Demais objetos: links
         Array.from(divs).forEach((div) => {
           const inputs = div.querySelectorAll("input");
           const select = div.querySelector("select");
@@ -209,17 +210,17 @@
       }
 
       function previewImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
         const reader = new FileReader();
-        reader.onload = function () {
-          const output = document.getElementById("preview-avatar");
-          output.src = reader.result;
+        reader.onload = () => {
+          document.getElementById("preview-avatar").src = reader.result;
         };
-        reader.readAsDataURL(event.target.files[0]);
+        reader.readAsDataURL(file);
       }
 
-      // Inicialização
       window.onload = carregarDados;
-      document.querySelector("button.bg-green-600").onclick = salvarDados;
+      document.getElementById("btn-salvar").onclick = salvarDados;
     </script>
   </body>
 </html>
