@@ -1,3 +1,7 @@
 [build]
-  publish = "."            # ou coloque "dist" se for Vite/React
+  publish = "."
   functions = "netlify/functions"
+  command = "echo 'Build completed'"
+
+[functions]
+  directory = "netlify/functions"
